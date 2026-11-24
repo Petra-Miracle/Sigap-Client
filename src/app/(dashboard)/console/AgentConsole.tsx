@@ -8,7 +8,7 @@ import { TraceList } from "@/components/agent/TraceList";
 import { ChatPanel } from "@/components/chat/ChatPanel";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
-import { Card, CardHeader } from "@/components/ui/Card";
+import { Card, CardHeader, Tabs } from "@/components/ui";
 import { Toggle } from "@/components/ui/Toggle";
 import { useActiveSession } from "@/hooks/useActiveSession";
 import { useConversation } from "@/hooks/useConversation";
@@ -87,7 +87,47 @@ export function AgentConsole() {
         </Alert>
       ) : null}
 
-      <div className="grid min-h-0 flex-1 gap-3 md:grid-cols-[minmax(300px,360px)_minmax(0,1fr)] xl:grid-cols-[minmax(320px,380px)_minmax(0,1fr)_minmax(280px,340px)]">
+      {/* Mobile: tab agar 3 kolom tidak menumpuk panjang. */}
+      <div className="md:hidden">
+        <Tabs>
+          <Tabs.ListContainer>
+            <Tabs.List aria-label="Konsol agen">
+              <Tabs.Tab id="chat">Chat</Tabs.Tab>
+              <Tabs.Tab id="trace">Jejak</Tabs.Tab>
+              <Tabs.Tab id="context">Konteks</Tabs.Tab>
+            </Tabs.List>
+          </Tabs.ListContainer>
+          <Tabs.Panel id="chat" className="mt-3">
+            <ChatPanel
+              conv={conv}
+              onNewSession={() => void session.createNew()}
+              creating={session.creating}
+              className="h-[640px]"
+            />
+          </Tabs.Panel>
+          <Tabs.Panel id="trace" className="mt-3">
+            <Card className="flex h-[640px] min-h-0 flex-col">
+              <CardHeader
+                title="Jejak kerja agen"
+                subtitle="Niat → rencana → tool → hasil → guardrail → balasan, langsung dari backend"
+              />
+              <TraceList steps={conv.steps} messages={conv.messages} technical={technical} thinking={conv.typing} />
+            </Card>
+          </Tabs.Panel>
+          <Tabs.Panel id="context" className="mt-3 space-y-3">
+            <Card>
+              <CardHeader title="Konteks pelanggan" />
+              <CustomerContext detail={conv.detail} status={conv.status} handoffReason={conv.handoffReason} />
+            </Card>
+            <Card>
+              <CardHeader title="Tools agen" subtitle="Function calling; jumlah = dipakai di percakapan ini" />
+              <ToolList steps={conv.steps} />
+            </Card>
+          </Tabs.Panel>
+        </Tabs>
+      </div>
+
+      <div className="hidden min-h-0 flex-1 gap-3 md:grid md:grid-cols-[minmax(300px,360px)_minmax(0,1fr)] xl:grid-cols-[minmax(320px,380px)_minmax(0,1fr)_minmax(280px,340px)]">
         <ChatPanel
           conv={conv}
           onNewSession={() => void session.createNew()}

@@ -10,6 +10,7 @@ import { ChatBubble } from "./ChatBubble";
 import { ChatInput } from "./ChatInput";
 import { QuickReplies } from "./QuickReplies";
 import { TypingIndicator } from "./TypingIndicator";
+import { EmptyState, Skeleton } from "@/components/ui";
 
 /**
  * Simulator chat pelanggan bergaya layar HP. Dipakai di /chat (layar penuh)
@@ -85,8 +86,10 @@ export function ChatPanel({
 
       <div ref={scrollRef} className="min-h-0 flex-1 space-y-3 overflow-y-auto py-4" aria-live="polite">
         {(loading || !status) && !loadError && !messages.length ? (
-          <div className="flex justify-center py-10 text-ink-2">
-            <Loader2 aria-label="Memuat percakapan" className="size-5 animate-spin" />
+          <div className="space-y-3 px-4 py-6" aria-label="Memuat percakapan">
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-12 w-full rounded-bubble" />
           </div>
         ) : null}
         {loadError ? (
@@ -101,6 +104,11 @@ export function ChatPanel({
               {loadError.status === 404 ? "Percakapan tidak ditemukan." : loadError.message}
             </Alert>
           </div>
+        ) : null}
+        {messages.length === 0 && !loading && !loadError ? (
+          <EmptyState title="Halo! Saya Sigap, asisten internet rumah.">
+            <p className="mt-1">Coba tanya: cek cakupan di alamat saya, rekomendasi paket, atau jadwal pasang.</p>
+          </EmptyState>
         ) : null}
         {messages.map((m) => (
           <ChatBubble key={m.id} message={m} onAction={act} actionsDisabled={!aiActive || sending || m.id !== last?.id} />

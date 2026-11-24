@@ -1,14 +1,20 @@
-import type { ButtonHTMLAttributes } from "react";
+import type { ButtonHTMLAttributes, ComponentProps, ReactNode } from "react";
+import { Button as HeroButton } from "@heroui/react";
 import { cn } from "@/lib/format";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
 type Size = "md" | "sm";
 
-const VARIANTS: Record<Variant, string> = {
-  primary: "bg-accent text-white hover:bg-accent-strong disabled:bg-accent/50",
-  secondary: "bg-surface text-ink border border-line hover:bg-canvas disabled:text-ink-2",
-  ghost: "text-accent hover:bg-accent-soft disabled:text-ink-2",
-  danger: "bg-danger text-white hover:bg-danger/90 disabled:bg-danger/50",
+const VARIANT_MAP: Record<Variant, "primary" | "secondary" | "ghost" | "danger"> = {
+  primary: "primary",
+  secondary: "secondary",
+  ghost: "ghost",
+  danger: "danger",
+};
+
+const SIZE_MAP: Record<Size, "sm" | "md"> = {
+  md: "md",
+  sm: "sm",
 };
 
 /** Tombol dasar. Ukuran `md` memenuhi target sentuh 44 px. */
@@ -17,18 +23,18 @@ export function Button({
   size = "md",
   className,
   type = "button",
+  children,
   ...props
-}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size }) {
+}: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size; children?: ReactNode }) {
   return (
-    <button
+    <HeroButton
       type={type}
-      className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-control font-medium transition-colors disabled:cursor-not-allowed",
-        size === "md" ? "min-h-11 px-4 text-sm" : "min-h-8 px-3 text-xs",
-        VARIANTS[variant],
-        className,
-      )}
-      {...props}
-    />
+      variant={VARIANT_MAP[variant]}
+      size={SIZE_MAP[size]}
+      className={cn("min-h-11", size === "sm" && "min-h-8", className)}
+      {...(props as unknown as ComponentProps<typeof HeroButton>)}
+    >
+      {children}
+    </HeroButton>
   );
 }

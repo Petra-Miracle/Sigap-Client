@@ -1,8 +1,9 @@
-import type { HTMLAttributes, ReactNode } from "react";
+import type { ComponentProps, HTMLAttributes, ReactNode } from "react";
+import { Card as HeroCard } from "@heroui/react";
 import { cn } from "@/lib/format";
 
 export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("rounded-card border border-line bg-surface", className)} {...props} />;
+  return <HeroCard variant="default" className={cn(className)} {...(props as unknown as ComponentProps<typeof HeroCard>)} />;
 }
 
 /** Judul panel dengan aksi opsional di kanan. */

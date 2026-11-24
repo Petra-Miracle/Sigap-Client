@@ -1,6 +1,16 @@
 import { Badge, type Tone } from "@/components/ui/Badge";
 import { formatTimeSeconds, STEP_LABEL } from "@/lib/format";
 import type { AgentStep } from "@/types";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Headset,
+  ListChecks,
+  MessageSquare,
+  Shield,
+  Target,
+  Wrench,
+} from "lucide-react";
 
 type D = Record<string, unknown>;
 
@@ -81,15 +91,36 @@ function resultSummary(result: unknown): string | null {
   return null;
 }
 
+const STEP_ICON: Record<AgentStep["type"], typeof Target> = {
+  INTENT: Target,
+  PLAN: ListChecks,
+  TOOL_CALL: Wrench,
+  TOOL_RESULT: CheckCircle2,
+  GUARDRAIL: Shield,
+  REPLY: MessageSquare,
+  HANDOFF: Headset,
+  ERROR: AlertTriangle,
+};
+
 /** Satu langkah jejak agen. `technical` menampilkan argumen + JSON detail mentah. */
-export function TraceStep({ step, technical }: { step: AgentStep; technical: boolean }) {
+export function TraceStep({ step, technical, isLatest }: { step: AgentStep; technical: boolean; isLatest?: boolean }) {
   const d = (step.detail ?? {}) as D;
   const isTool = step.type === "TOOL_CALL" || step.type === "TOOL_RESULT";
   const summary = summaryOf(step);
+  const Icon = STEP_ICON[step.type];
   return (
-    <li className="relative pl-6">
-      <span aria-hidden className="absolute top-2 left-[7px] size-2 rounded-full bg-line ring-4 ring-surface" />
-      <div className="rounded-control border border-line bg-surface px-3 py-2">
+    <li className="relative pl-8">
+      <span
+        aria-hidden
+        className="absolute top-2 left-0 flex size-6 items-center justify-center rounded-full bg-surface ring-2 ring-line text-ink-2"
+      >
+        <Icon className="size-3.5" />
+      </span>
+      <div
+        className={`rounded-control border bg-surface px-3 py-2 transition-colors ${
+          isLatest ? "border-accent/60 ring-2 ring-accent/20" : "border-line"
+        }`}
+      >
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone={toneOf(step)}>{STEP_LABEL[step.type]}</Badge>
           {isTool ? (

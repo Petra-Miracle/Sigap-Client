@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Wrench } from "lucide-react";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/format";
+import { Tooltip } from "@/components/ui";
 import type { AgentStep, ToolInfo } from "@/types";
 
 /** Daftar tool agen (dari backend) + berapa kali dipakai di percakapan ini; tool terakhir disorot. */
@@ -45,11 +46,13 @@ export function ToolList({ steps }: { steps: AgentStep[] }) {
               isLast ? "border-accent bg-accent-soft" : "border-line bg-surface",
             )}
           >
-            <div className="flex items-center gap-2">
-              <Wrench aria-hidden className={cn("size-3.5", n ? "text-accent" : "text-ink-2")} />
-              <code className="font-mono text-xs font-medium text-ink">{t.name}</code>
-              {n ? <span className="ml-auto font-mono text-[11px] text-accent-strong">{n}×</span> : null}
-            </div>
+            <Tooltip content={t.description} placement="top">
+              <div className="flex items-center gap-2">
+                <Wrench aria-hidden className={cn("size-3.5", n ? "text-accent" : "text-ink-2")} />
+                <code className="font-mono text-xs font-medium text-ink">{t.name}</code>
+                {n ? <span className="ml-auto font-mono text-[11px] text-accent-strong">{n}×</span> : null}
+              </div>
+            </Tooltip>
             <p className="mt-1 line-clamp-2 text-xs text-ink-2">{t.description}</p>
           </li>
         );

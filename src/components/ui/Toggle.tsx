@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/format";
+import { Label, Switch } from "@heroui/react";
 
-/** Saklar on/off yang aksesibel (role="switch"). */
+/** Saklar on/off yang aksesibel (HeroUI Switch). */
 export function Toggle({
   checked,
   onChange,
@@ -13,28 +13,13 @@ export function Toggle({
   label: string;
 }) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className="inline-flex min-h-11 items-center gap-2 rounded-control px-1 text-sm text-ink-2 hover:text-ink"
-    >
-      <span
-        aria-hidden
-        className={cn(
-          "relative h-5 w-9 rounded-full transition-colors",
-          checked ? "bg-accent" : "bg-line",
-        )}
-      >
-        <span
-          className={cn(
-            "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
-            checked ? "translate-x-4.5" : "translate-x-0.5",
-          )}
-        />
-      </span>
-      {label}
-    </button>
+    <Switch isSelected={checked} onChange={onChange} className="min-h-11 items-center gap-2 px-1 text-sm text-ink-2 hover:text-ink">
+      <Switch.Control>
+        <Switch.Thumb />
+      </Switch.Control>
+      <Switch.Content>
+        <Label className="text-sm">{label}</Label>
+      </Switch.Content>
+    </Switch>
   );
 }

@@ -45,10 +45,15 @@ src/
   app/(dashboard)/console/     # Agent Console
   components/chat/             # ChatPanel, ChatBubble, cards, QuickReplies, ChatInput
   components/agent/            # TraceList, TraceStep, CustomerContext, ToolList
-  components/ui/               # Button, Badge, Card, Toggle, Alert, EmptyState
+  components/ui/               # Primitive HeroUI: Button, Badge/Chip, Card, Toggle, Alert, EmptyState, Skeleton, Tooltip, Tabs, Avatar, Toast (+ VengeanceUI morph-text)
+  components/landing/           # Hero landing (VengeanceUI)
   hooks/                       # useConversation, useActiveSession, useInbox, useRealtimeState
   lib/                         # api.ts (fetch wrapper), pusher.ts (singleton), session.ts, format.ts, demo.ts
   types/                       # types shared with the backend
 ```
+
+## UI (Fase UI-0..UI-5)
+
+Design system dibangun di atas **HeroUI v3.2.8** (`@heroui/react` + `@heroui/styles`) dengan aksen **VengeanceUI** (registry shadcn, komponen disalin ke `src/components/ui/`, mis. `morph-text`). Token warna/radius/font satu sumber di `src/app/globals.css`. Primitive lengkap ada di `src/components/ui/*` + barrel `index.ts`. Provider klien di `src/app/providers.tsx` (`I18nProvider`, `Toast.Provider`). Halaman: `/` landing, `/chat` simulator, `/console` (mobile: tabs). Aksesibilitas: `:focus-visible`, target sentuh ≥44px, ARIA labels, `prefers-reduced-motion`. Verifikasi: `npm run lint` dan `npm run build` harus bersih.
 
 Package prices and names come from the backend (seed demo data) and are labelled as demo in the UI.

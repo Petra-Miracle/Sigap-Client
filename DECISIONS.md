@@ -15,3 +15,43 @@ Ambiguous choices are resolved with the simplest option that still works. Backen
 9. **The trace is grouped per turn** (each `INTENT` starts a new turn) and labelled with the customer message that triggered it, so judges can easily follow cause and effect.
 10. **The Pencil mockup (`Pendev/Sigap-Mockup.pen`) could not be read** because the Pencil app wasn't running; the UI follows the design tokens in section 5.3 of the spec. Visuals can be matched to the mockup once the Pencil app is open.
 11. **Light theme only**, following the spec's tokens (canvas #F4F6F8, accent #0B6E8A). `suppressHydrationWarning` on `<html>` because browser extensions add attributes there.
+
+## Phase UI-0 (upgrade)
+
+12. **HeroUI v3.2.8** dipasang (`@heroui/react` + `@heroui/styles`) karena satu-satunya versi yang mendukung React 19, Next.js 16 App Router dan Tailwind 4; v3 tidak butuh `HeroUIProvider`, jadi provider cukup `I18nProvider` di `src/app/providers.tsx` (locale `id-ID`). Style diimpor via `@import "@heroui/styles"` di `globals.css` setelah Tailwind (urutan wajib). Token warna yang ada tetap jadi sumber kebenaran; pemetaan ke tema HeroUI dilakukan di UI-1.
+13. **VengeanceUI disiapkan sebagai tooling**, bukan paket: `components.json` (shadcn) dengan alias ke `@/lib/utils`, plus `src/lib/utils.ts` (`cn` = clsx + tailwind-merge) dan dependensi `motion`, `clsx`, `tailwind-merge`. Komponen VengeanceUI ditambahkan per kebutuhan lewat `npx shadcn add @vengeanceui/...` (UI-2/UI-4), bukan sekarang, agar bundle tidak membengkak.
+14. **`src/lib/format.ts` tetap memakai `cn` sederhana** (filter Boolean) untuk kompatibilitas kode lama; VengeanceUI memakai `src/lib/utils.ts`. Dua `cn` sengaja dipisah untuk tidak merusak perilaku kelas lama.
+
+## Phase UI-1 (design system)
+
+15. **Primitive ditulis ulang di atas HeroUI v3** (`Button`, `Badge`→Chip, `Card`, `Toggle`→Switch, `Alert`, `EmptyState`) dengan props lama dipertahankan agar pemanggil tidak berubah; `Skeleton`, `Tooltip`, `Tabs`, `Avatar`, `Toast` ditambahkan. `Toast.Provider` dipasang di `src/app/providers.tsx`.
+16. **Token dipetakan ke variabel HeroUI** (`--background`, `--foreground`, `--surface`, `--accent`, `--success`, `--warning`, `--danger`, `--border`, `--radius`) di `:root` dengan nilai hex token Sigap; `--radius` = 8 px (radius kontrol). Tailwind tetap memakai token lama via `@theme`.
+17. **Skala tipografi** (`text-display`/`h1`/`h2`/`h3`/`body`/`caption`/`mono`) ditambahkan di `@theme`; spacing memakai skala default Tailwind 4.
+18. **`/ui-preview`** ditambahkan (di bawah dashboard layout) untuk review semua primitive & varian.
+
+## Phase UI-2 (simulator chat)
+
+19. **Bubble memakai avatar HeroUI** (AI/CS) + animasi masuk via `motion` (opacity + y, 180 ms, easeOut). QuickReplies scroll horizontal di mobile (`overflow-x-auto`) dan wrap di desktop.
+20. **Empty state** ditambahkan di ChatPanel saat belum ada pesan (sapaan + contoh pertanyaan kualitatif).
+21. **Kartu** (Package/Slot) mendapat hover (border + shadow/translate) hanya via CSS; VengeanceUI tilt berat tidak dipakai agar bundle tetap kecil.
+
+## Phase UI-3 (console agen)
+
+22. **TraceStep** menampilkan ikon per jenis langkah + highlight langkah terbaru (ring accent); jejak tetap timeline vertikal.
+23. **Mobile console** memakai Tabs HeroUI (Chat/Jejak/Konteks) agar 3 kolom tidak menumpuk; desktop tetap grid 3 kolom.
+24. **RealtimeIndicator** dibungkus Tooltip (penjelasan status); dot ber-pulse saat menyambung.
+25. **ToolList** memakai Tooltip untuk deskripsi tool (Switch tidak ditambahkan karena tidak ada toggle backend; menghindari kontrol palsu).
+26. **AppNav** state aktif diperjelas (bg accent + shadow) dan logo sedikit lebih menonjol.
+
+## Phase UI-4 (landing)
+
+27. **`/` bukan lagi redirect**; menjadi landing dengan hero (MorphText VengeanceUI, lazy-loaded via next/dynamic), dua CTA, "Cara kerja" (4 langkah) dan "Fitur" (klaim kualitatif saja).
+28. **VengeanceUI dipakai** melalui registry shadcn: `morph-text` (hero) dan `aurora-hero` (tersedia, belum dipakai). Komponen berat di-load dinamis (`ssr: false`).
+29. **Reduced motion**: hero menampilkan judul statis jika `prefers-reduced-motion: reduce`; animasi CSS VengeanceUI juga tunduk pada aturan global.
+
+## Phase UI-5 (QA & polish)
+
+30. **`/ui-preview` dihapus** setelah review; `aurora-hero` yang tidak terpakai dihapus. `morph-text` tetap (dipakai hero).
+31. **Loading state** memakai Skeleton di ChatPanel dan CustomerContext (mengganti spinner teks).
+32. **README** diperbarui (bagian UI/struktur).
+33. **Verifikasi akhir**: `npm run lint` dan `npm run build` bersih; 6 static pages (`/`, `/chat`, `/console`, `/_not-found` + ...). Halaman responsif via Tailwind (mobile tabs, scroll horizontal quick replies); tidak ada horizontal scroll yang disengaja.

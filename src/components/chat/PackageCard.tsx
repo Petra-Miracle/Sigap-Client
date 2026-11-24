@@ -18,7 +18,10 @@ export function PackageCards({
   return (
     <div className="mt-2 space-y-2">
       {card.packages.map((p) => (
-        <div key={p.id} className="rounded-card border border-line bg-surface p-3 text-ink">
+        <div
+          key={p.id}
+          className="rounded-card border border-line bg-surface p-3 text-ink transition-all hover:border-accent/40 hover:shadow-sm"
+        >
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
@@ -36,7 +39,7 @@ export function PackageCards({
           <Button
             size="sm"
             variant={p.recommended ? "primary" : "secondary"}
-            className="mt-2 w-full min-h-10"
+            className="mt-2 w-full min-h-10 transition-transform hover:-translate-y-0.5"
             disabled={disabled}
             onClick={() => onChoose(`Pilih ${p.name}`)}
           >

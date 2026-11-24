@@ -1,4 +1,26 @@
 @import "tailwindcss";
+@import "@heroui/styles";
+
+/* Petakan token Sigap ke variabel semantik HeroUI (UI-1) agar HeroUI, Tailwind dan kelas lama memakai palet yang sama. */
+:root,
+[data-theme="light"] {
+  --background: #f4f6f8;        /* canvas */
+  --foreground: #101828;        /* ink */
+  --surface: #ffffff;           /* surface */
+  --surface-foreground: #101828;
+  --accent: #0b6e8a;
+  --accent-foreground: #ffffff;
+  --success: #067647;
+  --success-foreground: #ffffff;
+  --warning: #b54708;
+  --warning-foreground: #ffffff;
+  --danger: #b42318;
+  --danger-foreground: #ffffff;
+  --muted: #475467;             /* ink-2 */
+  --muted-foreground: #475467;
+  --border: #e4e7ec;            /* line */
+  --radius: 8px;
+}
 
 /* Design tokens Sigap (bagian 5.3). Dipakai lewat kelas Tailwind: bg-canvas, text-ink, border-line, dst. */
 @theme {
@@ -25,6 +47,22 @@
   --radius-control: 8px;
   --radius-card: 12px;
   --radius-bubble: 16px;
+
+  /* Skala tipografi (UI-1). Dipakai sebagai kelas Tailwind: text-display, text-h1, ... */
+  --text-display: 2rem;
+  --text-display--line-height: 2.25rem;
+  --text-h1: 1.5rem;
+  --text-h1--line-height: 1.875rem;
+  --text-h2: 1.25rem;
+  --text-h2--line-height: 1.625rem;
+  --text-h3: 1.125rem;
+  --text-h3--line-height: 1.5rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-mono: 0.8125rem;
+  --text-mono--line-height: 1.25rem;
 
   --animate-blink: blink 1.2s infinite ease-in-out;
   @keyframes blink {

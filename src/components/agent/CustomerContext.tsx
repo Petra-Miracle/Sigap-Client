@@ -1,5 +1,6 @@
 import { Check, Circle } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { cn, FUNNEL_STAGES, HANDOFF_LABEL, STATUS_LABEL } from "@/lib/format";
 import type { ConversationDetail, ConversationStatus, HandoffReason } from "@/types";
 
@@ -32,7 +33,14 @@ export function CustomerContext({
   status: ConversationStatus | null;
   handoffReason: HandoffReason | null;
 }) {
-  if (!detail) return <p className="px-4 py-6 text-sm text-ink-2">Memuat konteks…</p>;
+  if (!detail)
+    return (
+      <div className="space-y-2 px-4 py-6" aria-label="Memuat konteks">
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-4 w-2/3" />
+        <Skeleton className="h-4 w-1/3" />
+      </div>
+    );
   const p = detail.customer.profile ?? {};
   const stageIndex = FUNNEL_STAGES.findIndex((s) => s.stage === detail.customer.funnelStage);
   const selected = p.recommended?.find((r) => r.id === p.selectedPackageId);

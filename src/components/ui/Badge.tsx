@@ -1,26 +1,22 @@
 import type { ReactNode } from "react";
+import { Chip } from "@heroui/react";
 import { cn } from "@/lib/format";
 
 export type Tone = "neutral" | "accent" | "success" | "warning" | "danger";
 
-const TONES: Record<Tone, string> = {
-  neutral: "bg-canvas text-ink-2 border-line",
-  accent: "bg-accent-soft text-accent-strong border-accent/20",
-  success: "bg-success-soft text-success border-success/20",
-  warning: "bg-warning-soft text-warning border-warning/20",
-  danger: "bg-danger-soft text-danger border-danger/20",
+const COLOR_MAP: Record<Tone, "default" | "accent" | "success" | "warning" | "danger"> = {
+  neutral: "default",
+  accent: "accent",
+  success: "success",
+  warning: "warning",
+  danger: "danger",
 };
 
+/** Label kecil bergaya chip (HeroUI). */
 export function Badge({ tone = "neutral", children, className }: { tone?: Tone; children: ReactNode; className?: string }) {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold tracking-wide whitespace-nowrap",
-        TONES[tone],
-        className,
-      )}
-    >
+    <Chip color={COLOR_MAP[tone]} variant="soft" size="sm" className={cn("whitespace-nowrap", className)}>
       {children}
-    </span>
+    </Chip>
   );
 }

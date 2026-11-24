@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
+import { Alert as HeroAlert } from "@heroui/react";
 import { AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/format";
 
-/** Pesan error/peringatan yang jelas untuk pengguna, dengan aksi opsional (mis. "Coba lagi"). */
+/** Pesan error/peringatan yang jelas untuk pengguna, dengan aksi opsional. */
 export function Alert({
   tone = "danger",
   children,
@@ -15,17 +16,12 @@ export function Alert({
   className?: string;
 }) {
   return (
-    <div
-      role="alert"
-      className={cn(
-        "flex items-start gap-2 rounded-control border px-3 py-2 text-sm",
-        tone === "danger" ? "border-danger/20 bg-danger-soft text-danger" : "border-warning/20 bg-warning-soft text-warning",
-        className,
-      )}
-    >
-      <AlertTriangle aria-hidden className="mt-0.5 size-4 shrink-0" />
-      <div className="min-w-0 flex-1">{children}</div>
-      {action}
-    </div>
+    <HeroAlert status={tone} className={cn(className)}>
+      <HeroAlert.Indicator>
+        <AlertTriangle aria-hidden className="size-4" />
+      </HeroAlert.Indicator>
+      <HeroAlert.Content>{children}</HeroAlert.Content>
+      {action ? <div className="ml-auto flex items-center gap-1">{action}</div> : null}
+    </HeroAlert>
   );
 }

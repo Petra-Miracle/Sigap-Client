@@ -77,7 +77,7 @@ export function TraceList({
             </div>
             <ol className="relative space-y-2 before:absolute before:top-2 before:bottom-2 before:left-[10px] before:w-px before:bg-line">
               {turn.steps.map((s) => (
-                <TraceStep key={s.id} step={s} technical={technical} />
+                <TraceStep key={s.id} step={s} technical={technical} isLatest={s.id === steps[steps.length - 1]?.id} />
               ))}
             </ol>
           </li>
